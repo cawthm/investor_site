@@ -9,6 +9,7 @@
 
 library(shiny)
 library(tidyverse)
+library(lubridate)
 library(gt)
 
 # Define UI for application that draws a histogram
@@ -72,7 +73,7 @@ server <- function(input, output) {
         #mtcars[1:3, 1:3]
         #indra_history
         HISTORY %>%
-            filter(month < lubridate::month(TODAY, label = T)) %>%
+            filter(month < lubridate::month(Sys.Date(), label = T)) %>%
             group_by(month) %>%
             summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
                       spy_rtn_log = sum(spy_rtn_log, na.rm = T))
