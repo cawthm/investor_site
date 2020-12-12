@@ -67,7 +67,8 @@ ui <- fluidPage(
 server <- function(input, output) {
 
     output$distPlot <- render_gt({
-        indra_history
+        mtcars[1:3, 1:3]
+        #indra_history
         # HISTORY %>%
         #     filter(month < lubridate::month(TODAY, label = T)) %>%
         #     group_by(month) %>%
