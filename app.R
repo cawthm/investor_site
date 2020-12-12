@@ -34,13 +34,13 @@ ui <- fluidPage(
     )
 )
 
- indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
-     mutate(pretty_date = lubridate::as_date(indratools2::ms_to_datetime(timestamp))) %>%
-     group_by(pretty_date) %>%
-     summarise(bal = last(liquidationValue)) %>%
-     mutate(indra_rtn_bps = (bal/ lag(bal) - 1) * 10000,
-            indra_rtn_log = log(bal/lag(bal)) * 10000) %>%
-     mutate(holiday = (pretty_date %in% holidays))
+ # indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
+ #     mutate(pretty_date = lubridate::as_date(indratools2::ms_to_datetime(timestamp))) %>%
+ #     group_by(pretty_date) %>%
+ #     summarise(bal = last(liquidationValue)) %>%
+ #     mutate(indra_rtn_bps = (bal/ lag(bal) - 1) * 10000,
+ #            indra_rtn_log = log(bal/lag(bal)) * 10000) %>%
+ #     mutate(holiday = (pretty_date %in% holidays))
  
 
 
