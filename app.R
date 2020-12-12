@@ -34,7 +34,7 @@ ui <- fluidPage(
     )
 )
 
- # indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
+  indra_history <- read_csv("data/indra_acct_bal.csv") #%>% 
  #     mutate(pretty_date = lubridate::as_date(indratools2::ms_to_datetime(timestamp))) %>%
  #     group_by(pretty_date) %>%
  #     summarise(bal = last(liquidationValue)) %>%
