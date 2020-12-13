@@ -70,11 +70,12 @@ HISTORY <- left_join(indra_history, spy_history) %>%
 server <- function(input, output) {
 
     output$distPlot <- render_gt({
-        HISTORY %>%
-            filter(month < lubridate::month(Sys.Date(), label = T)) %>%
-            group_by(month) %>%
-            summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
-                      spy_rtn_log = sum(spy_rtn_log, na.rm = T))
+        HISTORY
+        # HISTORY %>%
+        #     filter(month < lubridate::month(Sys.Date(), label = T)) %>%
+        #     group_by(month) %>%
+        #     summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
+        #               spy_rtn_log = sum(spy_rtn_log, na.rm = T))
     })
 }
 
