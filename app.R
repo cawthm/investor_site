@@ -59,25 +59,25 @@ spy_history <- indratools2::td_market_value_traded("SPY") %>%
        spy_rtn_log = log(close/ lag(close))*10000)
 #
 # # 
-# HISTORY <- left_join(indra_history, spy_history) %>%
-#     filter(pretty_date <= lubridate::ymd(20200731)) %>%
-#     mutate(day = lubridate::wday(pretty_date),
-#            day_long = lubridate::wday(pretty_date, label = TRUE),
-#            day_short = str_sub(day_long, 1, 1),
-#            week = lubridate::epiweek(pretty_date),
-#            mday = lubridate::mday(pretty_date),
-#            month = lubridate::month(pretty_date, label = TRUE))
+HISTORY <- left_join(indra_history, spy_history) %>%
+    filter(pretty_date <= lubridate::ymd(20200731)) %>%
+    mutate(day = lubridate::wday(pretty_date),
+           day_long = lubridate::wday(pretty_date, label = TRUE),
+           day_short = str_sub(day_long, 1, 1),
+           week = lubridate::epiweek(pretty_date),
+           mday = lubridate::mday(pretty_date),
+           month = lubridate::month(pretty_date, label = TRUE))
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
     output$distPlot <- render_gt({
-        indra_history
-        # HISTORY %>%
-        #     filter(month < lubridate::month(Sys.Date(), label = T)) %>%
-        #     group_by(month) %>%
-        #     summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
-        #               spy_rtn_log = sum(spy_rtn_log, na.rm = T))
+        
+        HISTORY %>%
+            filter(month < lubridate::month(Sys.Date(), label = T)) %>%
+            group_by(month) %>%
+            summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
+                      spy_rtn_log = sum(spy_rtn_log, na.rm = T))
     })
 }
 
