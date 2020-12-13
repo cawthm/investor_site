@@ -49,7 +49,9 @@ holidays <- lubridate::ymd(paste0("2020", c("0101", "0120", "0217", "0410", "052
 
 ### we'll also need historical data for SPY
 # 
-spy_history <- indratools2::td_market_value_traded("SPY", n_years = 1) #%>%
+  
+indratools2::td_market_value_traded("AAPL")#, n_years = 1)
+#spy_history <- indratools2::td_market_value_traded("SPY", n_years = 1) #%>%
     # as_tibble() %>%
     # mutate(pretty_date = lubridate::as_date(pretty_date)) %>%
     # select(pretty_date, close) %>%
