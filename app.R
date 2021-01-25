@@ -30,14 +30,15 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           gt_output("distPlot")
+          gt_output("currTable"),
+           gt_output("histTable")
         )
     )
 )
 
 holidays <- lubridate::ymd(paste0("2020", c("0101", "0120", "0217", "0410", "0525", "0703", "0907", "1126", "1225")))
 
-  indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
+indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
      mutate(pretty_date = lubridate::as_date(indratools2::ms_to_datetime(timestamp))) %>%
      group_by(pretty_date) %>%
      summarise(bal = last(liquidationValue)) %>%
@@ -45,6 +46,10 @@ holidays <- lubridate::ymd(paste0("2020", c("0101", "0120", "0217", "0410", "052
             indra_rtn_log = log(bal/lag(bal)) * 10000) %>%
      mutate(holiday = (pretty_date %in% holidays))
  
+
+read_csv("data/indra_acct_bal.csv") %>% 
+  mutate(pretty_date = indratools2::ms_to_datetime(timestamp)) %>%
+  select(pretty_date, liquidationValue) %>% tail(800) %>% View()
 
 
 ### we'll also need historical data for SPY
@@ -60,7 +65,7 @@ spy_history <- indratools2::td_market_value_traded("SPY") %>%
 #
 # # 
 HISTORY <- left_join(indra_history, spy_history) %>%
-    filter(pretty_date <= lubridate::ymd(20200731)) %>%
+    #filter(pretty_date <= lubridate::ymd(20200731)) %>%
     mutate(day = lubridate::wday(pretty_date),
            day_long = lubridate::wday(pretty_date, label = TRUE),
            day_short = str_sub(day_long, 1, 1),
@@ -68,16 +73,28 @@ HISTORY <- left_join(indra_history, spy_history) %>%
            mday = lubridate::mday(pretty_date),
            month = lubridate::month(pretty_date, label = TRUE))
 
+
+
+current_month <- HISTORY %>%
+  filter(month == "Dec" & year(pretty_date) == year(Sys.Date())) %>%
+  select(pretty_date, indra_rtn_bps,spy_rtn_bps)
+
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$distPlot <- render_gt({
+    output$histTable <- render_gt({
         
         HISTORY %>%
             filter(month < lubridate::month(Sys.Date(), label = T)) %>%
             group_by(month) %>%
-            summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T),
-                      spy_rtn_log = sum(spy_rtn_log, na.rm = T))
+            summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T)/100,
+                      spy_rtn_log = sum(spy_rtn_log, na.rm = T)/100) %>%
+            arrange(desc(month))
+    })
+    
+    output$currTable <- render_gt({
+      
+      current_month
     })
 }
 
