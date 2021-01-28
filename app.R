@@ -1,100 +1,54 @@
 #
 # This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
 
 library(shiny)
 library(tidyverse)
 library(lubridate)
 library(gt)
 
+### get some data
+## first we check the file system for SPY history and update it if it isn't there
+
+library(dplyr)
+library(gt)
+library(lubridate)
+
+source("global.R")
+
+
+##
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
     # Application title
-    titlePanel("INDRA Site Alpha"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-          gt_output("currTable"),
-           gt_output("histTable")
-        )
-    )
+  div(img(src = "indra_logo.png", height = 150, width = 300), 
+      style="text-align: center;"),
+  br(),
+  br(),
+  
+  gt_output("ytdTable"),
+  br(),
+  br(),
+  
+  gt_output("mtdTable")
 )
 
-holidays <- lubridate::ymd(paste0("2020", c("0101", "0120", "0217", "0410", "0525", "0703", "0907", "1126", "1225")))
-
-indra_history <- read_csv("data/indra_acct_bal.csv") %>% 
-     mutate(pretty_date = lubridate::as_date(indratools2::ms_to_datetime(timestamp))) %>%
-     group_by(pretty_date) %>%
-     summarise(bal = last(liquidationValue)) %>%
-     mutate(indra_rtn_bps = (bal/ lag(bal) - 1) * 10000,
-            indra_rtn_log = log(bal/lag(bal)) * 10000) %>%
-     mutate(holiday = (pretty_date %in% holidays))
- 
-
-read_csv("data/indra_acct_bal.csv") %>% 
-  mutate(pretty_date = indratools2::ms_to_datetime(timestamp)) %>%
-  select(pretty_date, liquidationValue) %>% tail(800) %>% View()
-
-
-### we'll also need historical data for SPY
-# 
-  
-#indratools2::td_market_value_traded("SPY", n_years = 1)
-spy_history <- indratools2::td_market_value_traded("SPY") %>%
-    as_tibble() %>%
-    mutate(pretty_date = lubridate::as_date(pretty_date)) %>%
-    select(pretty_date, close) %>%
-    mutate(spy_rtn_bps = (close/ lag(close) - 1) * 10000,
-       spy_rtn_log = log(close/ lag(close))*10000)
-#
-# # 
-HISTORY <- left_join(indra_history, spy_history) %>%
-    #filter(pretty_date <= lubridate::ymd(20200731)) %>%
-    mutate(day = lubridate::wday(pretty_date),
-           day_long = lubridate::wday(pretty_date, label = TRUE),
-           day_short = str_sub(day_long, 1, 1),
-           week = lubridate::epiweek(pretty_date),
-           mday = lubridate::mday(pretty_date),
-           month = lubridate::month(pretty_date, label = TRUE))
-
-
-
-current_month <- HISTORY %>%
-  filter(month == "Dec" & year(pretty_date) == year(Sys.Date())) %>%
-  select(pretty_date, indra_rtn_bps,spy_rtn_bps)
-
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
+  
+  live_data <- reactiveFileReader(20000, session, "data/indra_acct_bal.csv", read_csv)
 
-    output$histTable <- render_gt({
+    output$ytdTable <- render_gt({
         
-        HISTORY %>%
-            filter(month < lubridate::month(Sys.Date(), label = T)) %>%
-            group_by(month) %>%
-            summarise(indra_rtn_log = sum(indra_rtn_log, na.rm = T)/100,
-                      spy_rtn_log = sum(spy_rtn_log, na.rm = T)/100) %>%
-            arrange(desc(month))
+      live_data() %>% indra_df_format() %>% indra_ytd_gt()
+      
     })
     
-    output$currTable <- render_gt({
+    output$mtdTable <- render_gt({
       
-      current_month
+      live_data() %>% indra_df_format() %>% indra_mtd_gt()
     })
 }
 
