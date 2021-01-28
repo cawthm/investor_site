@@ -1,5 +1,9 @@
 #### 
-
+library(shiny)
+library(tidyverse)
+library(lubridate)
+library(indratools2)
+library(gt)
 # We have some helper functions for our app
 #
 #
@@ -12,7 +16,7 @@ market_holidays <- lubridate::ymd("2021-01-01", "2021-01-18", "2021-02-15", "202
 
 indra_df_format <- function(INDRA_raw_df) {
     INDRA_raw_df %>%
-        mutate(datetime = ms_to_datetime(timestamp),
+        mutate(datetime = indratools2::ms_to_datetime(timestamp),
                date = as.Date(datetime)) %>%
         select(datetime, date, nav = liquidationValue, spy_last) %>%
         group_by(date) %>%
