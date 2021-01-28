@@ -8,11 +8,6 @@ library(lubridate)
 library(gt)
 
 ### get some data
-## first we check the file system for SPY history and update it if it isn't there
-
-library(dplyr)
-library(gt)
-library(lubridate)
 
 source("global.R")
 
@@ -21,6 +16,7 @@ source("global.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  br(),
 
     # Application title
   div(img(src = "indra_logo.png", height = 150, width = 300), 
