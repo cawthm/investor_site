@@ -43,7 +43,7 @@ ui <- fluidPage(
     style = "color:grey;",
     style = "margin-left: auto;",
     style = "margin-right: auto;",
-    style = "width: 70%")
+    style = "width: 50%")
 )
 
 # Define server logic required to draw a histogram

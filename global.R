@@ -71,7 +71,7 @@ indra_ytd_gt <- function(input_df) {
                    mean_spy_rtn = "SPY") %>%
         tab_footnote(footnote = "All numbers are unaudited.",
                      locations = cells_column_labels(columns = c("YTD_return_indra", "YTD_return_spy"))) %>%
-        tab_footnote(footnote = "We compare with the S&P 500 ETF, which faces transaction & rebalancing costs.",
+        tab_footnote(footnote = "We compare with the S&P ETF, which faces transaction & rebalancing costs.",
                      locations = cells_column_labels(columns = c("YTD_return_spy"))) %>%
         tab_options(footnotes.font.size = 11)
 }
