@@ -41,7 +41,9 @@ ui <- fluidPage(
   subscription documents, and to consult with their tax, legal and financial advisors."), 
     style = "font-size:9px;",
     style = "color:grey;",
-    style="text-align: center;")
+    style = "margin-left: auto;",
+    style = "margin-right: auto;",
+    style = "width: 70%")
 )
 
 # Define server logic required to draw a histogram
