@@ -59,7 +59,7 @@ indra_ytd_gt <- function(input_df) {
         fmt_percent(columns = 2:3, decimals = 2) %>%
         fmt_number(columns = 4:5, decimals = 1, pattern = "{x}bps") %>%
         tab_header(title = "Year to date performance",
-                   subtitle = "Inception (Jan 22, 2021) to present") %>%
+                   subtitle = "Inception (Jan 22) to present") %>%
         tab_spanner(label = "Cumulative return",
                     columns = 2:3) %>%
         tab_spanner(label = "Avg daily return",
@@ -69,9 +69,9 @@ indra_ytd_gt <- function(input_df) {
                    YTD_return_spy = "SPY",
                    mean_indra_rtn = "Fund",
                    mean_spy_rtn = "SPY") %>%
-        tab_footnote(footnote = "Numbers are unaudited and not based on official closes, but include after market hours activity.",
+        tab_footnote(footnote = "All numbers are unaudited.",
                      locations = cells_column_labels(columns = c("YTD_return_indra", "YTD_return_spy"))) %>%
-        tab_footnote(footnote = "We compare vs the S&P 500 ETF, which faces transaction & rebalancing costs.",
+        tab_footnote(footnote = "We compare with the S&P 500 ETF, which faces transaction & rebalancing costs.",
                      locations = cells_column_labels(columns = c("YTD_return_spy"))) %>%
         tab_options(footnotes.font.size = 11)
 }
@@ -87,10 +87,14 @@ indra_mtd_gt <- function(input_df) {
         cols_label(indra_rtn = md("**Fund**"),
                    spy_rtn = md("**SPY**"),
                    over_under = md("*diff*")) %>%
-        tab_spanner(label = "Daily return in basis points",
+        tab_spanner(label = "Daily returns in basis points",
                     columns = 2:3) %>%
+        tab_footnote(footnote = "Daily returns are not based on official closes, but reflect marks circa 5pm CST",
+                     locations = cells_column_labels(columns = c("indra_rtn", "spy_rtn"))) %>%
+        tab_options(footnotes.font.size = 11,
+                    footnotes.marks = letters) %>%
         data_color(columns = 4,
                    colors = scales::col_numeric(palette = c("#fc5353", "#ff8585","#ffffff","#bdf7a6", "#59ff17"),
-                                                domain = c(-400, 400))
-        )
+                                                domain = c(-400, 400),
+                                                na.color = "#ECECEC"))
 }
