@@ -48,7 +48,7 @@ indra_ytd_gt <- function(input_df) {
 
     input_df %>%
         group_by(year) %>%
-        summarise(days_so_far = as.integer(difftime(last(date), first(date) ,units = "days")-1), 
+        summarise(days_so_far = as.integer(sum(!is.na(indra_rtn))), 
                   YTD_return_indra = (last(nav)/first(nav) - 1),
                   YTD_return_spy = (last(spy)/first(spy) - 1),
                   mean_indra_rtn = mean(indra_rtn, na.rm = T),
@@ -69,8 +69,10 @@ indra_ytd_gt <- function(input_df) {
                    YTD_return_spy = "SPY",
                    mean_indra_rtn = "Fund",
                    mean_spy_rtn = "SPY") %>%
-        tab_footnote(footnote = "We compare vs the S&P ETF, which faces transaction & rebalancing costs etc.",
-                     locations = cells_column_labels(columns = c("YTD_return_spy","mean_spy_rtn"))) %>%
+        tab_footnote(footnote = "Numbers are unaudited and not based on official closes, but include after market hours activity.",
+                     locations = cells_column_labels(columns = c("YTD_return_indra", "YTD_return_spy"))) %>%
+        tab_footnote(footnote = "We compare vs the S&P 500 ETF, which faces transaction & rebalancing costs.",
+                     locations = cells_column_labels(columns = c("YTD_return_spy"))) %>%
         tab_options(footnotes.font.size = 11)
 }
 
@@ -89,6 +91,6 @@ indra_mtd_gt <- function(input_df) {
                     columns = 2:3) %>%
         data_color(columns = 4,
                    colors = scales::col_numeric(palette = c("#fc5353", "#ff8585","#ffffff","#bdf7a6", "#59ff17"),
-                                                domain = c(-250, 250))
+                                                domain = c(-400, 400))
         )
 }

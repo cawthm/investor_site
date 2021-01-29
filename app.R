@@ -5,6 +5,7 @@
 library(shiny)
 library(tidyverse)
 library(lubridate)
+library(indratools2)
 library(gt)
 
 ### get some data
@@ -19,7 +20,7 @@ ui <- fluidPage(
   br(),
 
     # Application title
-  div(img(src = "indra_logo.png", height = 150, width = 300), 
+  div(img(src = "indra_logo.png", height = 160, width = 320), 
       style="text-align: center;"),
   br(),
   br(),
@@ -28,7 +29,19 @@ ui <- fluidPage(
   br(),
   br(),
   
-  gt_output("mtdTable")
+  gt_output("mtdTable"),
+  br(),
+  br(),
+  br(),
+  p(strong("This page does not constitute an offer to sell, or a solicitation of an offer to buy, an 
+  Interest in any Fund described herein. Any such offer or solicitation may be made only by the 
+  delivery of a private offering memorandum and other materials relating to such Interest. Before 
+  making any investment decisions with respect to the Interest, potential investors are advised to 
+  read carefully the private offering memorandum, the limited partnership agreement and related 
+  subscription documents, and to consult with their tax, legal and financial advisors."), 
+    style = "font-size:9px;",
+    style = "color:grey;",
+    style="text-align: center;")
 )
 
 # Define server logic required to draw a histogram
