@@ -24,6 +24,7 @@ indra_df_format <- function(INDRA_raw_df) {
                   spy = last(spy_last)) %>% 
         mutate(year = year(date),
                month = month(date),
+               month_label = month(date, label = T),
                day = day(date),
                wday = wday(date, abbr = T, label = T),
                wday_short = str_sub(wday,1,1)) %>%
@@ -35,7 +36,7 @@ indra_df_format <- function(INDRA_raw_df) {
                spy_rtn = 10000 * (spy/lag(spy) - 1),
                spy_rtn_cum = 100*(spy/first(spy)-1),
                over_under = indra_rtn - spy_rtn,
-               d_d = paste0(wday, "." ,day)) %>%
+               d_d = paste0(wday, ".", month_label, ".",day)) %>%
         filter(date >= as.Date("2021-01-22")) %>%
         ungroup() %>% 
         mutate(indra_rtn = ifelse(date %in% market_holidays, NA, indra_rtn),
@@ -81,6 +82,8 @@ indra_ytd_gt <- function(input_df) {
 indra_mtd_gt <- function(input_df) {
 
     input_df %>%
+        filter(month(date) == month( Sys.Date() ) & 
+               year(date)  ==  year( Sys.Date() )) %>%
         select(d_d, indra_rtn, spy_rtn, over_under) %>%
         gt(rowname_col = "d_d") %>%
         fmt_number(columns = 2:4, decimals = 1) %>%
