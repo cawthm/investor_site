@@ -29,7 +29,7 @@ indra_df_format <- function(INDRA_raw_df) {
                wday = wday(date, abbr = T, label = T),
                wday_short = str_sub(wday,1,1)) %>%
         fill(c(nav, spy)) %>%
-        filter(date >= as.Date("2021-01-22")) %>%
+        filter(date >= as.Date("2021-01-21")) %>%
         group_by(year) %>%
         mutate(indra_rtn = 10000 * (nav/ lag(nav) - 1),
                indra_rtn_cum = 100*(nav/first(nav)-1),
@@ -37,6 +37,7 @@ indra_df_format <- function(INDRA_raw_df) {
                spy_rtn_cum = 100*(spy/first(spy)-1),
                over_under = indra_rtn - spy_rtn,
                d_d = paste0(wday, ".", month_label, ".",day)) %>%
+        filter(date >= as.Date("2021-01-22")) %>%
         ungroup() %>% 
         mutate(indra_rtn = ifelse(date %in% market_holidays, NA, indra_rtn),
                spy_rtn = ifelse(date %in% market_holidays, NA, spy_rtn))
