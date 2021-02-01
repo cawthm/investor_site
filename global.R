@@ -90,6 +90,7 @@ indra_mtd_gt <- function(input_df) {
         cols_label(indra_rtn = md("**Fund**"),
                    spy_rtn = md("**SPY**"),
                    over_under = md("*diff*")) %>%
+        tab_header(title = "Current month to date performance") %>%
         tab_spanner(label = "Daily returns in basis points",
                     columns = 2:3) %>%
         tab_footnote(footnote = "Daily returns are not based on official closes, but reflect marks circa 5pm CST",
