@@ -24,13 +24,15 @@ ui <- fluidPage(
   div(img(src = "indra_logo.png", height = 160, width = 320), 
       style="text-align: center;"),
   br(),
+  p(a("investor.relations@indracapital.tech", href = "mailto:investor.relations@indracapital.tech"),
+    style="text-align: center;"),
   br(),
   
-  gt_output("ytdTable"),
+  #gt_output("ytdTable"),
   br(),
   br(),
   
-  gt_output("mtdTable"),
+  #gt_output("mtdTable"),
   br(),
   br(),
   br(),
@@ -40,7 +42,7 @@ ui <- fluidPage(
   making any investment decisions with respect to the Interest, potential investors are advised to 
   read carefully the private offering memorandum, the limited partnership agreement and related 
   subscription documents, and to consult with their tax, legal and financial advisors."), 
-    style = "font-size:9px;",
+    style = "font-size:7px;",
     style = "color:grey;",
     style = "margin-left: auto;",
     style = "margin-right: auto;",
